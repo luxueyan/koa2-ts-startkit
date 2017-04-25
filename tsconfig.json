@@ -1,15 +1,43 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2016",
-        "noImplicitAny": false,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "sourceMap": true,
-        "outDir": "build",
-        "watch": false
-    },
-    "files": [
-        "src/app.ts"
-    ]
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "es2015",
+      "es2015.promise"
+    ],
+    "module": "commonjs",
+    "target": "es2016",
+    "preserveConstEnums": true,
+    "isolatedModules": false,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "outDir": "build",
+    "watch": false
+  },
+  "typeRoots": [
+    // "types",
+    "node_modules/@types"
+  ],
+  "types": [
+    "chai",
+    "mocha",
+    "node",
+    "es6-shim",
+    "es6-promise",
+    // "orm",
+    // "requirejs",
+    "sinon",
+    "sinon-chai"
+  ],
+  "include": [
+    "./types/**/*.d.ts",
+    "./src/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
 }

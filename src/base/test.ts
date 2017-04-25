@@ -4,7 +4,7 @@ import InitModel from '../base/models'
 const logger = Log4js.getLogger('test')
 
 InitModel().then(db => {
-	logger.debug('------inited-----', db.models)
+  logger.debug('------inited-----', db.models)
 }).catch(err => {
-	logger.error('-------init failed------', err)
+  logger.error('-------init failed------', err)
 })

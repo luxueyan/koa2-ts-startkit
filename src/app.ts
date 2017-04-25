@@ -14,7 +14,7 @@ import SessionStore from './utils/session'
 import InitModels from './base/models'
 
 //Routers
-//accout router 
+//accout router
 import Base from './base/router'
 import Account from './account/router'
 import Pets from './pets/router'
@@ -45,62 +45,61 @@ logger.info('                  佛祖保佑       永无BUG')
 //Web init
 const app = new Koa()
 
-//Web Environment 
-const isProdEnv:boolean = process.env.NODE_ENV === 'production'
+//Web Environment
+const isProdEnv: boolean = process.env.NODE_ENV === 'production'
 
 //Nunjucks Template Engine config
 app.use(Nunjucks(`${Path.resolve(__dirname, '..')}/views`, {
-	ext: 'html',  //target file is html
-	noCache: !isProdEnv,  //noCache in devlopment environment
-	filter: {
-		json: (str:string):string => {
-			return JSON.stringify(str, null, 2)
-		}
-	},
-	globals: {  // global variable in Template
-		STATIC_URL: '/static'
-	}
+  ext: 'html', //target file is html
+  noCache: !isProdEnv, //noCache in devlopment environment
+  filter: {
+    json: (str: string): string => {
+      return JSON.stringify(str, null, 2)
+    }
+  },
+  globals: { // global variable in Template
+    STATIC_URL: '/static'
+  }
 }))
 
 //Static Path of Web
 app.use(Mount('/static', Server(`${Path.resolve(__dirname, '..')}/public`)))
 
 //http logs
-app.use(Log4js.koaLogger(Log4js.getLogger('http'), {level: 'auto'}))
+app.use(Log4js.koaLogger(Log4js.getLogger('http'), { level: 'auto' }))
 
-//Request Body Parse 
+//Request Body Parse
 app.use(BodyParser())
 
-//Session 
+//Session
 app.use(Session({
-	key: 'feisession',
-	store: new SessionStore(),
-	maxAge: 3600000
+  key: 'feisession',
+  store: new SessionStore(),
+  maxAge: 3600000
 }))
 
-//request CSRF 
+//request CSRF
 app.use(new Csrf({
-	invalidSessionSecretMessage: 'Invalid session secret',
-	invalidSessionSecretStatusCode: 403,
-	invalidTokenMessage: 'Invalid CSRF token',
-	invalidTokenStatusCode: 403,
-	excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
-	disableQuery: false
+  invalidSessionSecretMessage: 'Invalid session secret',
+  invalidSessionSecretStatusCode: 403,
+  invalidTokenMessage: 'Invalid CSRF token',
+  invalidTokenStatusCode: 403,
+  excludedMethods: ['GET', 'HEAD', 'OPTIONS'],
+  disableQuery: false
 }))
-app.use(async (ctx, next) => {
-	if(ctx.method === 'GET') {
-		ctx.cookies.set('csrftoken', ctx.csrf, {httpOnly: false})
-	}
-	await next()
+app.use(async(ctx, next) => {
+  if (ctx.method === 'GET') {
+    ctx.cookies.set('csrftoken', ctx.csrf, { httpOnly: false })
+  }
+  await next()
 })
 
 app.use(Base.routes())
-	.use(Base.allowedMethods())
-	.use(Account.routes())
-	.use(Account.allowedMethods())
-	.use(Pets.routes())
-	.use(Pets.allowedMethods())
+  .use(Base.allowedMethods())
+  .use(Account.routes())
+  .use(Account.allowedMethods())
+  .use(Pets.routes())
+  .use(Pets.allowedMethods())
 
 app.listen(config.listenPort)
 logger.info('[worker:%s] web server start listen on %s', process.pid, config.listenPort)
-
